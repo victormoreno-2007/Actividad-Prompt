@@ -581,3 +581,13 @@ Es la instrucción definitiva. Le exige a la IA asumir el rol de Arquitecto Seni
    - Explicación breve de cada prompt
 2. Código fuente en Python
 3. Archivo JSON generado por el programa
+
+
+
+---
+
+##  NOTAS
+
+aqui se anexará la el link del repositorio con el readme que contiene la información de la actividad anterior que fue sobre la el Analisis Etica en la IA
+
+**LINK** -> https://github.com/victormoreno-2007/Taller-Analisis-Etica-en-la-IA.git
