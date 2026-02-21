@@ -588,6 +588,12 @@ Es la instrucción definitiva. Le exige a la IA asumir el rol de Arquitecto Seni
 
 ##  NOTAS
 
-aqui se anexará la el link del repositorio con el readme que contiene la información de la actividad anterior que fue sobre la el Analisis Etica en la IA
+- aqui se anexará la el link del repositorio con el readme que contiene la información de la actividad anterior que fue sobre la el Analisis Etica en la IA
 
-**LINK** -> https://github.com/victormoreno-2007/Taller-Analisis-Etica-en-la-IA.git
+​	**LINK** -> https://github.com/victormoreno-2007/Taller-Analisis-Etica-en-la-IA.git
+
+
+
+- en el siguiente link del repositorio de github se va a encontrar el entregable del codigo y pruebas de la realización del taller 
+
+  **LINK** -> https://github.com/victormoreno-2007/Actividad-Prompt.git
