@@ -1,34 +1,24 @@
-package com.victor;
+package com.victor; // Asegúrate de que este sea tu paquete
 
 
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Main {
-    // Clase interna para el modelo de datos
-    static class Producto {
-        String id;
-        String nombre;
-        double precio;
-
-        Producto(String id, String nombre, double precio) {
-            this.id = id;
-            this.nombre = nombre;
-            this.precio = precio;
-        }
-    }
-
     private static final String ARCHIVO_JSON = "productos.json";
-    private static Map<String, Producto> diccionario = new HashMap<>();
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    
+    // 1. Aquí aplicamos el Paso 2: El Diccionario Anidado
+    private static Map<String, Map<String, Object>> diccionario = new HashMap<>();
+    
+    // Instancia de Jackson para manejar el JSON
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) {
         cargarDatos();
@@ -36,7 +26,7 @@ public class Main {
         boolean continuar = true;
 
         while (continuar) {
-            System.out.println("\n--- MENÚ V1 ---");
+            System.out.println("\n--- MENÚ V2 (Diccionarios Anidados y Jackson) ---");
             System.out.println("1. Agregar");
             System.out.println("2. Listar");
             System.out.println("3. Salir");
@@ -51,11 +41,25 @@ public class Main {
                 System.out.print("Precio: ");
                 double precio = Double.parseDouble(scanner.nextLine());
 
-                diccionario.put(id, new Producto(id, nombre, precio));
+                // 2. Creamos el diccionario interno (los atributos)
+                Map<String, Object> atributos = new HashMap<>();
+                atributos.put("nombre", nombre);
+                atributos.put("precio", precio);
+
+                // 3. Lo guardamos en el diccionario principal usando el ID
+                diccionario.put(id, atributos);
+                
                 guardarDatos();
-                System.out.println("Guardado.");
+                System.out.println("✅ Guardado en diccionario anidado.");
             } else if (opcion.equals("2")) {
-                System.out.println(gson.toJson(diccionario));
+                if (diccionario.isEmpty()) {
+                    System.out.println("No hay datos.");
+                } else {
+                    // Imprimimos la estructura anidada
+                    for (Map.Entry<String, Map<String, Object>> entry : diccionario.entrySet()) {
+                        System.out.println("ID: " + entry.getKey() + " -> Datos: " + entry.getValue());
+                    }
+                }
             } else if (opcion.equals("3")) {
                 continuar = false;
             }
@@ -64,21 +68,22 @@ public class Main {
     }
 
     private static void guardarDatos() {
-        try (FileWriter writer = new FileWriter(ARCHIVO_JSON)) {
-            gson.toJson(diccionario, writer);
+        try {
+            // Jackson guarda el diccionario anidado con formato bonito (pretty printer)
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARCHIVO_JSON), diccionario);
         } catch (IOException e) {
-            System.out.println("Error al guardar.");
+            System.out.println("Error al guardar: " + e.getMessage());
         }
     }
 
     private static void cargarDatos() {
-        File f = new File(ARCHIVO_JSON);
-        if (f.exists()) {
-            try (FileReader reader = new FileReader(f)) {
-                Type tipo = new TypeToken<HashMap<String, Producto>>(){}.getType();
-                diccionario = gson.fromJson(reader, tipo);
+        File archivo = new File(ARCHIVO_JSON);
+        if (archivo.exists()) {
+            try {
+                // Jackson lee el JSON y reconstruye el Map anidado
+                diccionario = mapper.readValue(archivo, new TypeReference<Map<String, Map<String, Object>>>() {});
             } catch (IOException e) {
-                System.out.println("Error al cargar.");
+                System.out.println("Error al cargar: " + e.getMessage());
             }
         }
     }
